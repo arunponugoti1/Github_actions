@@ -1,0 +1,20 @@
+How to connect local machine to remote machine:
+first iniciate the github in the local repo
+git init
+first clone the remote repo with below command
+git remote add origin github url
+if you have any content to change then change and make it to the stage
+git add . 
+git commit - m " discription"
+Create new branch 
+git branch -m <branch name>
+-------
+Now you can push to the remote repo
+git push -u origin main<branch name>
+---------
+If you face any kind of authentication issue or challenge (Permission, unable to access)
+Use below command
+To connect remote repo from local repo we need to configure authentication
+
+git remote set-url origin https://username:password@github.com/arunponugoti1/Github_actions.git
+Create access tocken and replace with password and add user name
