@@ -18,3 +18,4 @@ To connect remote repo from local repo we need to configure authentication
 
 git remote set-url origin https://username:password@github.com/arunponugoti1/Github_actions.git
 Create access tocken and replace with password and add user name
+---------------------------------------------------------------------
