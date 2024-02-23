@@ -4,10 +4,9 @@ jobs:
   first-job:
     runs-on: ubuntu letest
     steps:
-      -name: print name
-       run: echo " Hey Arun Ponugoti wellcome to the github actions world"
-      -name: print status of work
-       run: echo " works is still in the progress"
+      - name: print status of work
+        run:  echo "hellow world" 
+       
        
        
       
