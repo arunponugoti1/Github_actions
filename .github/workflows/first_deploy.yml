@@ -6,6 +6,9 @@ jobs:
     steps:
       - name: print status of work
         run:  echo "hellow world" 
+    
+      - name: print status of work
+        run:  echo "hellow world" 
        
        
        
