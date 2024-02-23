@@ -2,7 +2,7 @@ name: First workflow
 on: workflow_dispatch
 jobs: 
   first-job:
-    runs-on: Ubuntu 23.04
+    runs-on: ubuntu-latest
     steps:
       - name: print status of work
         run:  echo "hellow world" 
