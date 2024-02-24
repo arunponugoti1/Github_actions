@@ -9,7 +9,8 @@ jobs:
     
       - name: print status of work
         run:  echo "hellow world" 
-       
+      - name: third stage 
+        run: echo "need to remove feature branch"
        
        
       
