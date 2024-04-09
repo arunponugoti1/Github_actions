@@ -15,13 +15,11 @@ jobs:
         with:
           service_account_key: ${{secrets.RCM_DB_SERVICE_ACCOUNT}}
           project_id: ${{secrets.GOOGLE_PROJECT_ID}}
-
       - name: Set environment variables (Optional)
         run: |
-         echo "Setting environment variables"
-         echo "DB_USER=sqlserver" >> $GITHUB_ENV
-         echo "DB_PASSWORD=${{secrets.RCM_DB_PASSWORD1}}" >> $GITHUB_ENV
-
+          echo "Setting environment variables"
+          echo "DB_USER=sqlserver" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{secrets.RCM_DB_PASSWORD1}}" >> $GITHUB_ENV
       - name: Enter Instance Details (Optional - for demonstration)
       - name: Access Instance (Replace placeholders)
         run: |
@@ -29,5 +27,4 @@ jobs:
                              --user="${{secrets.DB_USER}}" \
                              --password="${{secrets.RCM_DB_PASSWORD1}}" \
                              --quiet
-      - name: Perform SQL operations (Optional) 
-  
+      - name: Perform SQL operations (Optional)
