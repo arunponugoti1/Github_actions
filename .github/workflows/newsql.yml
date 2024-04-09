@@ -1,17 +1,14 @@
----
-name: Deploy to Google Cloud
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
+
 jobs:
-  deploy:
+  db-migrate:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+      - uses: ahmadnassri/action-google-cloud-sql-proxy@v1
         with:
-          service_account_key: ${{secrets.RCM_DB_SERVICE_ACCOUNT}}
-          project_id: ${{secrets.GOOGLE_PROJECT_ID}}
+          key: ${{secrets.RCM_DB_SERVICE_ACCOUNT}}
+          connection: my-project:northamerica-northeast1:database
+          port: 5432
