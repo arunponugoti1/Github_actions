@@ -28,5 +28,5 @@ jobs:
                              --user="${{secrets.DB_USER}}" \
                              --password="${{secrets.RCM_DB_PASSWORD1}}" \
                              --quiet
-      - name: Perform SQL operations (Optional)
+      - name: Perform SQL operations (Optional) 
   
