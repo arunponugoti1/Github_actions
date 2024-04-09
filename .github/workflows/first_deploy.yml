@@ -19,7 +19,7 @@ jobs:
         run: >
           # Set instance connection name
 
-          INSTANCE_CONNECTION_NAME="smiling-audio-398006:us-central1:rcmdatabase"
+          # INSTANCE_CONNECTION_NAME="smiling-audio-398006:us-central1:rcmdatabase"
 
 
           # Set database user and password
