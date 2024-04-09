@@ -15,18 +15,4 @@ jobs:
         with:
           service_account_key: ${{secrets.RCM_DB_SERVICE_ACCOUNT}}
           project_id: ${{secrets.GOOGLE_PROJECT_ID}}
-      - name: Access Cloud SQL
-        run: >
-
-          INSTANCE_CONNECTION_NAME="smiling-audio-398006:us-central1:rcmdatabase"
-
-
-
-          DB_USER="sqlserver"
-
-          DB_PASSWORD="${{secrets.RCM_DB_PASSWORD1}}"
-
-
-         
-
-          gcloud sql connect $INSTANCE_CONNECTION_NAME --user=$DB_USER --quiet --project=$project_id --password=$DB_PASSWORD
+      
