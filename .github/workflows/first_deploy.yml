@@ -15,14 +15,14 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.2.0
         with:
-          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          project_id: <your-project-id>
+          service_account_key: ${{ secrets.rcm_db_service_account}}
+          project_id: smiling-audio-398006
 
       - name: Retrieve DB Password from Secret Manager
         run: |
-          export DB_PASSWORD=$(gcloud secrets versions access latest --secret=<your-secret-name>)
+          export DB_PASSWORD=$(gcloud secrets versions access latest --secret=rcm_db_password)
           echo "::set-env name=DB_PASSWORD::$DB_PASSWORD"
 
       - name: Execute SQL Script
         run: |
-          gcloud sql connect <instance-connection-name> --user=root --quiet -e "source arun.sql" --password=$DB_PASSWORD
+          gcloud sql connect smiling-audio-398006:us-central1:rcmdatabase --user=root --quiet -e "source arun/arun.sql" --password=$DB_PASSWORD
