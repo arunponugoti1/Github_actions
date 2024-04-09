@@ -1,14 +1,57 @@
+name: Deploy Migrations
+
 on:
   push:
-    branches: [ master ]
+    branches:
+      - main
+
+env:
+  PROJECT_ID: smiling-audio-398006
+  INSTANCE_CONNECTION_NAME: smiling-audio-398006:us-central1:rcmdatabase
+  DB_HOST: 34.121.101.49
+  DB_PORT: 3306
+  DB_NAME: arun_database
+  DB_USER: sqlserver
+  DB_PASSWORD: ${{ secrets.RCM_DB_PASSWORD1 }}
 
 jobs:
-  db-migrate:
+  deploy-migrations:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
-      - uses: ahmadnassri/action-google-cloud-sql-proxy@v1
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
         with:
-          key: ${{secrets.RCM_DB_SERVICE_ACCOUNT}}
-          connection: my-project:northamerica-northeast1:database
-          port: 5432
+          # workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          service_account: 'rcm-db-service-account@smiling-audio-398006.iam.gserviceaccount.com'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 416.0.0'
+
+      - name: Download Cloud SQL Proxy
+        run: |
+          wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+          chmod +x cloud_sql_proxy
+
+      - name: Start Cloud SQL Proxy
+        run: ./cloud_sql_proxy -instances=$INSTANCE_CONNECTION_NAME=tcp:3306 &
+
+      - name: Wait for Cloud SQL Proxy to Start
+        run: |
+          ./wait-for-it.sh $DB_HOST:$DB_PORT -s -t 10 -- echo "Cloud SQL Proxy is running"
+
+      # - name: Deploy Migrations
+        # run: |
+          # echo -ne '\n' | atlas migrate apply   --url "mysql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME"   --dir file://migrations
+
+      - name: Stop Cloud SQL Proxy
+        run: kill $(ps aux | grep cloud_sql_proxy | grep -v grep | awk '{print $2}')
