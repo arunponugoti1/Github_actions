@@ -1,28 +1,32 @@
-name: Deploy to Cloud SQL
+name: Deploy SQL Script to Cloud SQL
 
 on:
   push:
     branches:
-      - main
+      - main  # Set to your main branch or appropriate branch
 
 jobs:
   deploy:
+    name: Deploy SQL Script
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          service_account_key: ${{ secrets.RCM_DB_SERVICE_ACCOUNT}}
-          project_id: smiling-audio-398006
-
-      - name: Retrieve DB Password from Secret Manager
-        run: |
-          export DB_PASSWORD=$(gcloud secrets versions access latest --secret=RCM_DB_PASSWORD1)
-          echo "::set-env name=DB_PASSWORD::$DB_PASSWORD"
-
-      - name: Execute SQL Script
-        run: |
-          gcloud sql connect smiling-audio-398006:us-central1:rcmdatabase --user=sqlserver --quiet -e "source arun/arun.sql" --password=$RCM_DB_PASSWORD1
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.GOOGLE_PROJECT_ID }}
+        service_account_key: ${{ secrets.RCM_DB_SERVICE_ACCOUNT }}
+        export_default_credentials: true
+      
+    - name: Retrieve password from Google Secrets Manager
+      run: |
+        gcloud secrets versions access latest --secret="rcm_db_password" > db_password.txt
+      env:
+        GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_PROJECT_ID }}
+    
+    - name: Execute SQL script on Cloud SQL instance
+      run: |
+        gcloud sql connect smiling-audio-398006:us-central1:rcmdatabase --user=sqlserver --password=$(cat db_password.txt) < arun/arun.sql
