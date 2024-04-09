@@ -1,0 +1,30 @@
+---
+name: Access Google Cloud SQL Instance
+on:
+  push:
+    branches:
+      - main
+jobs:
+  access_instance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{secrets.RCM_DB_SERVICE_ACCOUNT}}
+      - name: Set environment variables (Optional)
+        run: |
+         echo "Setting environment variables"
+         echo "DB_USER=sqlserver" >> $GITHUB_ENV
+         echo "DB_PASSWORD=${{secrets.RCM_DB_PASSWORD1}}" >> $GITHUB_ENV
+
+      - name: Enter Instance Details (Optional - for demonstration)
+      - name: Access Instance (Replace placeholders)
+        run: |
+          gcloud sql connect "${{secrets.INSTANCE_CONNECTION_NAME}}" \
+                             --user="${{secrets.DB_USER}}" \
+                             --password="${{secrets.RCM_DB_PASSWORD1}}" \
+                             --quiet
+      - name: Perform SQL operations (Optional)
+  
