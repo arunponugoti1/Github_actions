@@ -1,16 +1,28 @@
-name: First workflow
-on: workflow_dispatch
-jobs: 
-  first-job:
+name: Deploy to Cloud SQL
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Greeting
-        run:  echo "Hello Arun how are you" 
-    
-      - name: print status of work
-        run:  echo "hellow world" #
-       
-       
-       
-      
-       
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          project_id: <your-project-id>
+
+      - name: Retrieve DB Password from Secret Manager
+        run: |
+          export DB_PASSWORD=$(gcloud secrets versions access latest --secret=<your-secret-name>)
+          echo "::set-env name=DB_PASSWORD::$DB_PASSWORD"
+
+      - name: Execute SQL Script
+        run: |
+          gcloud sql connect <instance-connection-name> --user=root --quiet -e "source arun.sql" --password=$DB_PASSWORD
