@@ -17,6 +17,6 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           service_account_key: ${{secrets.RCM_DB_SERVICE_ACCOUNT}}
-          project_id: 	smiling-audio-398006
+          project_id: ${{secrets.GOOGLE_PROJECT_ID}}
 
       # Add more steps for deploying to Google Cloud here
