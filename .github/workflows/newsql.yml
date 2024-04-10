@@ -1,57 +1,129 @@
-name: Deploy Migrations
-
+name: NEW Run DB/DB_New_User_Creation/01_New_User_Creation_Script
 on:
-  push:
-    branches:
-      - main
+
+workflow_dispatch:
+
+inputs:
+
+version:
+
+description: 'Provide the VERSION you want to deploy'
+
+type: string
+
+required: true
+
+default: "1.0.6"
+
+environment:
+
+  description: "Environment to apply the changes"
+  type: choice
+
+  required: true
+
+  options:
+
+   "uat"
+
+  default: "uat"
+
+deploy:
+
+ description: 'Deploy the scripts
+
+type: boolean
+
+required: true
+
+default: true
+
+SQL Instance:
+
+description: "Select cloudsql instance name"
+
+type: choice
+
+required: true
+
+options: actimize-uat-ber-mssql-app
+
+default: actimize-uat-ber-mssql-app
+
+gcpproject:
+
+type: choice
+
+description: 'Select GCP Project'
+
+required: true
+options: db-uat-yr1s-actimize-eri-001-1
+default: db-uat-yris-actimize-eri-001-1
+
+liquibase secret:
+
+type: choice
+
+description: 'Select Secret value for SQL Instance
+
+required: true
+
+options:
+
+-UAT
+
+default: UAT
 
 env:
-  PROJECT_ID: smiling-audio-398006
-  INSTANCE_CONNECTION_NAME: smiling-audio-398006:us-central1:rcmdatabase
-  DB_HOST: 34.121.101.49
-  DB_PORT: 3306
-  DB_NAME: arun_database
-  DB_USER: sqlserver
-  DB_PASSWORD: ${{ secrets.RCM_DB_PASSWORD1 }}
+
+#SQL #SQL INSTANCE: "db-prd-htlf-actimize-eri-001-1:europe-west3:actimize-main-prd-sam-c-mssql-eri-001-1-tcp:1433" # INSTANCE: "db-prd-htlf-actimize-eri-001-1:europe-west3:actimize-main-prd-san-c-mssql-er1-001-1-tcp:1433" ##
+
+# SAM-C RCM PROD DATABASE INSTANCE
+
+SAM-C PROD SAM DATABASE INSTANCE
+
+#SQL INSTANCE: "db-dev-84el-actimize-eri-001-1:europe-west3:actimize-dev-sam-apac-tuning-mssql-eri-001-1-tcp:1433
+
+" ## DEV APAC SQL INSTANCE
+
+#SQL INSTANCE: "db-prd-htlf-actimize-eri-001-1:europe-west3:actimize-prd-sam-c-mssql-eri-001-1-ekm-tcp:1433" ##
+
+REGULAR EKM PROD DATABASE MAIN CONUAT
+
+#SQL INSTANCE: "db-prd-htlf-actimize-eri-001-1:europe-west3:actimize-prd-san-c-mssql-eri-001-1-ekm2-tcp:1433" #
+
+# EKM2 PROD DATABASE TUNNING ENV
+
+SQL INSTANCE: "${{ github.event.inputs.gcpproject}): europe-west3:$({ github.event.inputs.SQL Instance))=tcp:1433"
+
+ARTIFACTORY HOSTNAME: "artifactory.sdlc.ctl.gcp.db.com"
+
+LIQUIBASE HOME: artifactory/mvn-public-local/com/db/actimize/db-actimize-liquibase-sqlserver
+
+VERSION: ${{ github.event.inputs.version}}
+
+-FOLDER NAME: db-actimize-liquibase-sqlserver-${{github.event.inputs.version}) -no_proxy: "metadata.google.internal, localhost,db.com"
 
 jobs:
-  deploy-migrations:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
 
-      
+Trigger:
 
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          # workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-          service_account: 'rcm-db-service-account@smiling-audio-398006.iam.gserviceaccount.com'
+name: Trigger MF
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
-        with:
-          version: '>= 416.0.0'
+uses: y253-q6ix/app-actimize-workflow-ext/.github/workflows/db_user_creation.yaml@db_user_migration
 
-      - name: Download Cloud SQL Proxy
-        run: |
-          wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
-          chmod +x cloud_sql_proxy
+with:
 
-      - name: Start Cloud SQL Proxy
-        run: ./cloud_sql_proxy -instances=$INSTANCE_CONNECTION_NAME=tcp:3306 &
+version: ${{github.event.inputs.version})
 
-      - name: Wait for Cloud SQL Proxy to Start
-        run: |
-          ./wait-for-it.sh $DB_HOST:$DB_PORT -s -t 10 -- echo "Cloud SQL Proxy is running"
+environment: ${{ github.event.inputs.environment))
 
-      # - name: Deploy Migrations
-        # run: |
-          # echo -ne '\n' | atlas migrate apply   --url "mysql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME"   --dir file://migrations
+deploy: ${{ github.event.inputs.deploy }}
 
-      - name: Stop Cloud SQL Proxy
-        run: kill $(ps aux | grep cloud_sql_proxy | grep -v grep | awk '{print $2}')
+SQL Instance: ${{github.event.inputs.SQL Instance ))
+
+gcpproject: ${{ github.event.inputs.gcpproject }}
+
+liquibase_secret: ${{ github.event.inputs.liquibase_secret)}
+
+secrets: inherit
