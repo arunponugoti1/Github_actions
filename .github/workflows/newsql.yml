@@ -1,6 +1,5 @@
 name: NEW Run DB/DB_New_User_Creation/01_New_User_Creation_Scriptt
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 inputs:
 
