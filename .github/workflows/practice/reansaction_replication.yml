@@ -1,5 +1,5 @@
 ---
-name: Deploy to Google Cloud
+name: Deploy to GoogleCloud
 on: workflow_dispatch
 
 jobs:
