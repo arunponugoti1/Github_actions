@@ -24,3 +24,7 @@ jobs:
     - name: Create table in Cloud SQL
       run: |
         gcloud sql databases execute-sql smiling-audio-398006:us-west3:rcm  --project=smiling-audio-398006 --database=to_publish  --sql="CREATE TABLE new_table (id INT, name VARCHAR(255))"
+    - name: Execute SQL command to create table
+      uses: google-github-actions/cloud-sdk@master
+      with:
+        args: sql connect smiling-audio-398006:us-west3:rcm --user=sqlserver --quiet --project=smiling-audio-398006 --database=to_publish
