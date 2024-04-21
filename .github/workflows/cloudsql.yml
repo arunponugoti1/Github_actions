@@ -20,6 +20,7 @@ jobs:
         service_account_key: ${{ secrets.SA_KEY }}
         export_default_credentials: true
 
+    
     - name: Create table in Cloud SQL
       run: |
-        gcloud sql connect smiling-audio-398006:us-west3:rcm --user=sqlserver --quiet --project=smiling-audio-398006 --database=to_publish --execute="CREATE TABLE new_table (id INT, name VARCHAR(255))"
+        gcloud sql databases execute-sql smiling-audio-398006:us-west3:rcm  --project=smiling-audio-398006 --database=to_publish  --sql="CREATE TABLE new_table (id INT, name VARCHAR(255))"
