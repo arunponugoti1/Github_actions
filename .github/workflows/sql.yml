@@ -1,11 +1,11 @@
-name: Run SQL Script with Input IP
+name: Run SQL Script on PostgreSQL
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
     inputs:
-      INSTANCE_IP :
+      INSTANCE_IP:
         description: 'Value for rcm parameter'
         required: true
 
@@ -16,21 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install SQL Server tools (if needed)
-        # Adjust the following line based on your specific database engine
-        run: sudo apt-get update && sudo apt-get install -y mssql-tools
+      - name: Install psql (if needed)
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
-      - name: Get input IP address
+      - name: Get input IP address (if applicable)
         id: get-ip
         run: echo "INSTANCE_IP=$(echo ${{ secrets.INSTANCE_IP }})" >> $GITHUB_ENV
 
       - name: Run SQL script
-        uses: Azure/sql-action@v1.17.0
-        with:
-          server: ${{ secrets.SERVER_NAME }}
-          database: ${{ secrets.DATABASE_NAME }}
-          username: ${{ secrets.DATABASE_USERNAME }}
-          password: ${{ secrets.DATABASE_PASSWORD }}
-          # Reference the input IP address in your SQL script
-          # For example: UPDATE MyTable SET IpAddress = '$INSTANCE_IP' WHERE ...
-          script: "your_script.sql"
+        run: psql -h ${{ secrets.SERVER_NAME }} -U ${{ secrets.DATABASE_USERNAME }} -d ${{ secrets.DATABASE_NAME }} -f your_script.sql
+
+        # Or, if using the input IP:
+        # run: psql -h ${{ secrets.SERVER_NAME }} -U ${{ secrets.DATABASE_USERNAME }} -d ${{ secrets.DATABASE_NAME }} -f your_script.sql -v:INSTANCE_IP=${{ env.INSTANCE_IP }}
