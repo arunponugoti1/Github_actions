@@ -1,0 +1,36 @@
+name: Run SQL Script with Input IP
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      INSTANCE_IP :
+        description: 'Value for rcm parameter'
+        required: true
+
+jobs:
+  execute_sql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install SQL Server tools (if needed)
+        # Adjust the following line based on your specific database engine
+        run: sudo apt-get update && sudo apt-get install -y mssql-tools
+
+      - name: Get input IP address
+        id: get-ip
+        run: echo "INSTANCE_IP=$(echo ${{ secrets.INSTANCE_IP }})" >> $GITHUB_ENV
+
+      - name: Run SQL script
+        uses: Azure/sql-action@v1.17.0
+        with:
+          server: ${{ secrets.SERVER_NAME }}
+          database: ${{ secrets.DATABASE_NAME }}
+          username: ${{ secrets.DATABASE_USERNAME }}
+          password: ${{ secrets.DATABASE_PASSWORD }}
+          # Reference the input IP address in your SQL script
+          # For example: UPDATE MyTable SET IpAddress = '$INSTANCE_IP' WHERE ...
+          script: "your_script.sql"
