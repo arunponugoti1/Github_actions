@@ -1,0 +1,25 @@
+name: Cloud SQL Table Creation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_table:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0.3.0
+      with:
+        project_id: smiling-audio-398006
+        service_account_key: ${{ secrets.SA_KEY }}
+        export_default_credentials: true
+
+    - name: Create table in Cloud SQL
+      run: |
+        gcloud sql connect smiling-audio-398006:us-west3:rcm --user=sqlserver --quiet --project=smiling-audio-398006 --database=to_publish --execute="CREATE TABLE new_table (id INT, name VARCHAR(255))"
