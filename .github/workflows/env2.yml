@@ -1,0 +1,31 @@
+name: SQL Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      rcm:
+        description: 'Value for rcm parameter'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Run SQL script with parameter
+      env:
+        RCM_VALUE: ${{ github.event.inputs.rcm }}
+      run: |
+        # Replace the command below with your actual SQL execution command
+        # For example, if you are using SQL Server, you can use sqlcmd
+        # sqlcmd -S servername -U username -P password -d dbname -v rcm=${{ github.event.inputs.rcm }} -i arun/script.sql
+
+    - name: Execute shell script with environment variable
+      run: |
+        bash arun/arun.sh "${{ github.event.inputs.rcm }}"
