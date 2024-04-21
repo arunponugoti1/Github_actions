@@ -7,5 +7,5 @@ echo "Enter a number: "
 read number
 
 # Print the name and number
-echo "Hello, $name! You entered the number: $number"
+echo "Hello, $RCM_VALUE! You entered the number: $RCM_VALUE"
 
