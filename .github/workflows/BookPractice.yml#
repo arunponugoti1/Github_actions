@@ -1,0 +1,14 @@
+# we are going to create new workflow
+
+name: Book Practice workflow
+#on: [push, pull_request,workflow_dispatch] # cntl+ space to get autocomplete in side 
+# the bracket those we can it as triggers ON is a event
+on:
+  push:
+    branches: 
+      - main
+  workflow_dispatch:
+    
+  
+
+
