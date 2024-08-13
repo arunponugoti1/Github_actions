@@ -19,7 +19,7 @@ jobs:
   first-job:
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Hellow World'
+      - run: echo 'Hellow World from ${{ github..actor.'
   
 
 
