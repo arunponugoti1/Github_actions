@@ -1,25 +1,38 @@
 # we are going to create new workflow
 
-name: Book Practice workflow
-#on: [push, pull_request,workflow_dispatch] # cntl+ space to get autocomplete in side 
-# the bracket those we can it as triggers ON is a event
-on:
+# name: Book Practice workflow
+# #on: [push, pull_request,workflow_dispatch] # cntl+ space to get autocomplete in side 
+# # the bracket those we can it as triggers ON is a event
+# on:
+#   push:
+#     branches: 
+#       - main
+#   workflow_dispatch:
+
+# # on:
+# #   push:
+# #     branches: 
+# #       - 'release/**'
+# #     paths:
+# #       - 'docs/**'
+# jobs:
+#   first-job:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - run: echo 'Hellow World from ${{ github.actor}}.'
+
+# name of the workflow
+name: book worklfow
+on: 
   push:
     branches: 
       - main
   workflow_dispatch:
 
-# on:
-#   push:
-#     branches: 
-#       - 'release/**'
-#     paths:
-#       - 'docs/**'
 jobs:
-  first-job:
+  firstjob:
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Hellow World from ${{ github.actor}}.'
-  
-
+      - run: echo " hellow world from ${{ github.actor}} "
+    
 
