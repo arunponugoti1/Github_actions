@@ -29,10 +29,27 @@ on:
       - main
   workflow_dispatch:
 
+# jobs:
+#   firstjob:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - run: echo " hellow world from ${{ github.actor}} "
+
 jobs:
-  firstjob:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo " hellow world from ${{ github.actor}} "
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # ...
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # ...
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      # ...
+      
     
 
